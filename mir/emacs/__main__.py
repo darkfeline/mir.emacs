@@ -11,6 +11,9 @@ def main():
     logging.basicConfig(level='DEBUG')
 
     cwindow = curses.initscr()
+    curses.noecho()
+    curses.nonl()
+    curses.raw()
     buf = buffer.Buffer()
 
     loop = asyncio.get_event_loop()
@@ -29,8 +32,11 @@ async def get_key(window):
         char = cwindow.getkey()
         if char == 'q':
             break
+        if char == 'w':
+            pass
         else:
             await process_char(buf, char)
+            window.refresh()
 
 
 async def process_char(buf, char):

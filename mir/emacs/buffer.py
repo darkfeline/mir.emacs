@@ -9,7 +9,7 @@ class Buffer:
         return len(self._buffer)
 
     def __getitem__(self, i):
-        return self._buffer(i)
+        return self._buffer[i]
 
     def insert_char(self, i, s):
         self._buffer.insert(i, s)
@@ -38,5 +38,5 @@ class Window:
             if i >= length:
                 break
             y, x = coord
-            cwindow.adch(y, x, buffer[i])
+            cwindow.addch(y, x, buffer[i])
         cwindow.refresh()
