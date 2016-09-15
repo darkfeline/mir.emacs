@@ -1,6 +1,8 @@
 import asyncio
+import curses
 import logging
-import sys
+
+from mir.emacs import buffer
 
 logger = logging.getLogger(__name__)
 
@@ -8,19 +10,31 @@ logger = logging.getLogger(__name__)
 def main():
     logging.basicConfig(level='DEBUG')
 
+    cwindow = curses.initscr()
+    buf = buffer.Buffer()
+
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(get_key())
-    loop.close()
+    try:
+        loop.run_until_complete(get_key(buffer.Window(cwindow, buf)))
+    except Exception:
+        logger.exception('Uncaught exception')
+    finally:
+        loop.close()
 
 
-async def get_key():
-    for line in sys.stdin:
-        for char in line:
-            await process_char(char)
+async def get_key(window):
+    cwindow = window.cwindow
+    buf = window.buffer
+    while True:
+        char = cwindow.getkey()
+        if char == 'q':
+            break
+        else:
+            await process_char(buf, char)
 
 
-async def process_char(char):
-    sys.stdout.write(char)
+async def process_char(buf, char):
+    buf.insert_char(len(buf), char)
 
 if __name__ == '__main__':
     main()
