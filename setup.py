@@ -33,7 +33,7 @@ setup(
     packages=['mir.emacs'],
     entry_points={
         'console_scripts': [
-            'mir.emacs = mir.emacs.__main__:main',
+            'mir.emacs = mir.emacs.main:main',
         ],
     },
 )
